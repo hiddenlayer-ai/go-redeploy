@@ -11,9 +11,9 @@ import (
 
 // make these accessible with a config file
 const (
-	WAITING    = 5
-	REPOPATH   = "../"
-	EXECUTABLE = "example"
+	WAITING    = 5                // time in seconds to wait before update lookup
+	REPOPATH   = "../go-redeploy" // relative path to repo to manage
+	EXECUTABLE = "go-redeploy"    // name of executable to run
 )
 
 var (
@@ -25,7 +25,8 @@ var (
 )
 
 func RUN(command string) *bytes.Buffer {
-	cmd := exec.Command(command)
+	c := strings.Split(command, " ")
+	cmd := exec.Command(c[0], c[1:]...)
 	cmd.Dir = REPOPATH
 	out := new(bytes.Buffer)
 	cmd.Stdout = out
@@ -33,7 +34,7 @@ func RUN(command string) *bytes.Buffer {
 	err := cmd.Run()
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return nil
 	}
 
@@ -41,6 +42,7 @@ func RUN(command string) *bytes.Buffer {
 }
 
 func main() {
+	fmt.Println("ayyy")
 	for {
 		out := RUN(DIFF)
 
@@ -52,6 +54,6 @@ func main() {
 			RUN(EXEC)
 		}
 
-		time.Sleep(WAITING)
+		time.Sleep(WAITING * time.Second)
 	}
 }
