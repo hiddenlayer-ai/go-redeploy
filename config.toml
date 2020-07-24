@@ -1,0 +1,4 @@
+# this is an example configuration file
+sleep = 5
+repo-path = "../go-redeploy"
+entry-point = "go-redeploy"
